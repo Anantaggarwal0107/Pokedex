@@ -1,0 +1,35 @@
+import Card from './Card'
+import Header from './Header'
+import React from 'react';
+import axios from 'axios'
+
+export default function MainContent() {
+  const [pokemon,setPokemon]=React.useState([]);
+  const [arr,setarr]=React.useState([]);
+  React.useEffect(()=> async function () {
+      const url = `https://pokeapi.co/api/v2/pokemon/?offset={}&limit=200`;
+      const response = await axios.get(url);
+      const data = response.data;
+      setPokemon(data.results);
+  },[])
+
+  function toggle(search){
+    console.log(search)
+    const temp=pokemon.filter(x => 
+      x.name.includes(search)
+    )
+    setarr(temp.map(x =>(
+      <Card className="card" title={x.name} body="Pokemon" />
+    )))
+  }
+  return (
+    <div>
+      <div className='header'>
+        <Header fun={toggle}/>
+      </div>
+      <div className='some'>
+        {arr}
+      </div>
+    </div>
+  );
+}
